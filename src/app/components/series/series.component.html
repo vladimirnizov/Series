@@ -1,0 +1,43 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <app-dropdown class="col-xs-12 col-sm-6" [button]="selected_series" title="My favorite series:">
+        <a class="dropdown-item" *ngFor="let series of series_list" href="#" (click)="setSeries(series)">{{ series.title }}</a>
+      </app-dropdown>
+      <app-dropdown *ngIf="seasons.length" class="col-xs-12 col-sm-6" [button]="season" title="Season:">
+        <a class="dropdown-item" *ngFor="let item of seasons; let i = index;" (click)="setSeason(i+1)">{{i+1}} </a>
+      </app-dropdown>
+    </div>
+  </div>
+  <div class="card-body" style="min-height: 410px; background-color: whitesmoke;">
+    <div class="row" *ngIf="currentSeason">
+      <div class="col-sm-12">
+        <kendo-grid [data]="currentSeason.Episodes" [height]="410" (cellClick)="rowClick($event)">
+          <kendo-grid-column *ngFor="let field of getKeys(currentSeason.Episodes[0])" [field]="field" [title]="field" width="80">
+          </kendo-grid-column>
+        </kendo-grid>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="showModal" (click)="showModal = false">
+  <div class="popup" (click)="$event.stopPropagation()">
+    <ng-container *ngIf="loading; else elseTemplate">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </ng-container>
+    <ng-template #elseTemplate>
+      <div class="card p-2" style="width: 20rem;">
+        <img class="card-img-top" [src]="episode.Poster" alt="poster">
+        <div class="card-body">
+          <h5 class="card-title">{{ episode.Title }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ episode.Genre }} {{ episode.Runtime }}</h6>
+          <h6 class="card-subtitle mb-2 text-muted">Runtime: {{ episode.Runtime }}</h6>
+          <p class="card-text">{{ episode.Plot }}</p>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>
